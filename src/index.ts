@@ -5,7 +5,7 @@ import cors from 'cors';
 import schedule from 'node-schedule';
 
 import db from './models';
-import { SensorRoute } from './routes';
+import { AuthenticationRoute, SensorRoute } from './routes';
 import historyRunner from './runners/history';
 
 /** Express application */
@@ -31,7 +31,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 /** Assign the routes to the application */
-app.use('/api/v1', SensorRoute);
+app.use('/api/v1/sensor', SensorRoute);
+app.use('/api/v1/user', AuthenticationRoute);
 
 /** Call the history runner once */
 schedule.scheduleJob('5 0 */1 * * *', () => {
