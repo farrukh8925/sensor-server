@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { endOfDay, formatISO, subHours } from 'date-fns';
+import { endOfDay, formatISO, subHours, startOfDay } from 'date-fns';
 import db from '../models';
 
 /** Extract sensor from db */
@@ -54,16 +54,14 @@ export const saveHistory = (data: any) => {
  */
 export const getAll = (req: Request, res: Response) => {
   /** Get the date from the query params */
-  let queryStartDate: Date | string = subHours(new Date(), 3);
-  let queryEndDate: Date | string = subHours(endOfDay(new Date()), 3);
+  let queryStartDate: Date | string = startOfDay(new Date());
+  let queryEndDate: Date | string = endOfDay(new Date());
 
   const { date } = req.query;
 
   if (date && typeof date === 'string') {
-    queryStartDate = formatISO(subHours(new Date(Number(date) * 1000), 3));
-    queryEndDate = formatISO(
-      subHours(endOfDay(new Date(Number(date) * 1000)), 3),
-    );
+    queryStartDate = formatISO(startOfDay(new Date(Number(date) * 1000)));
+    queryEndDate = formatISO(endOfDay(new Date(Number(date) * 1000)));
   }
 
   Sensor.find({
